@@ -1,11 +1,19 @@
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     .plus-jakarta-sans {
   font-family: "Plus Jakarta Sans", sans-serif !important;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
-} 
+}
+
+.container{
+    padding-bottom: 120px;
+    flex: 1;
+}
 
 .navbar{
     height: 5rem;
@@ -15,6 +23,11 @@ body {
 .fa-mountain{
     color: brown;
     font-size: 2rem;
+}
+
+/* Ensure all font-awesome icons in footer are black */
+.fa-brands {
+    color: #000000 !important;
 }
 
 .nav-link{
@@ -37,20 +50,31 @@ body {
     justify-content: center;
 }
 
+.f-info-links {
+    display: flex;
+    gap: 1rem;
+}
+
 .f-info-socials i{
    margin-right: 1rem;
    font-size: 1.2rem;
 }
 
 .f-info{
-    text-align: center;
     display: flex;
-    height: 8rem;
-    background-color: #ebebeb;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: space-evenly;
+    gap: 0.5rem;
+    background-color: #ebebeb;
+    padding: 1rem 0;
+    text-align: center;
 }
+
+.f-info-brand {
+    color: #000000;
+}
+
 
 .card{
     border: none !important;
@@ -70,4 +94,74 @@ body {
 
 .card-text p {
     font-weight: 400;
+}
+
+.listing-link {
+    text-decoration: none;
+}
+
+.card-img-overlay{
+    opacity: 0;
+}
+
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: white;
+}
+
+.add-btn{
+    background-color: brown !important;
+    border: none !important;
+}
+
+/* Footer static at bottom of page */
+footer {
+    background-color: #ebebeb;
+    padding: 1rem 0;
+    text-align: center;
+    /* removed fixed positioning */
+    margin-top: 2rem;
+}
+
+/* Footer content styling */
+.f-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.f-info-socials i {
+    color: #000000; /* icons black */
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+
+.f-info a {
+    color: #000000; /* links black */
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+.f-info a:hover {
+    text-decoration: underline;
+}
+
+.edit-btn {
+    background-color: brown !important;
+    border: none !important;
+}
+
+.show-img {
+    height: 30vh;
+}
+
+.btns{
+    display: flex;
+}
+
+.show-card {
+    padding-left: 0;
+    padding-right: 0;
 }
