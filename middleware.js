@@ -35,11 +35,27 @@ module.exports.isOwner = async (req, res, next) => {
 }
 
 module.exports.validateListing = (req, res, next) => {
-    let {error} = listingSchema.validate(req.body);
-    if(error){
-        let errMsg = error.details.map((el) => el.message).join(",");
+    // Support both nested "listing" object and flat "listing[field]" keys (from multipart forms)
+    let body = req.body;
+    if (!body.listing) {
+        const parsed = {};
+        for (const key of Object.keys(body)) {
+            const match = key.match(/^listing\[(.+)\]$/);
+            if (match) {
+                parsed[match[1]] = body[key];
+            }
+        }
+        if (Object.keys(parsed).length) {
+            body = { ...body, listing: parsed };
+        }
+    }
+    const {error} = listingSchema.validate(body);
+    if (error) {
+        const errMsg = error.details.map(el => el.message).join(",");
         throw new ExpressError(400, errMsg);
-    }else{
+    } else {
+        // Ensure req.body.listing is populated for downstream handlers
+        req.body = body;
         next();
     }
 }

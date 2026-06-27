@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config();
+}
+console.log(process.env.SECRET);
+
 const express = require ("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -41,7 +46,8 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        // FIX: Wrap the timestamp in a new Date() object
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
     },
@@ -74,9 +80,10 @@ app.get("/demouser", async (req, res) => {
         username: "delta-student"
     });
 
-    let registeredUsers = await User.register(fakeUser, "helloworld");
-    res.send(registeredUser)
-})
+    // FIX: Variable name matches the res.send variable
+    let registeredUser = await User.register(fakeUser, "helloworld");
+    res.send(registeredUser);
+});
 
 const validateListing = (req, res, next) => {
     let {error} = listingSchema.validate(req.body);
@@ -102,6 +109,8 @@ app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 
+// FIX: Use app.all("*") to strictly catch unmatched paths
+// Catch‑all for any unmatched route – placed after all other routes
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 });
