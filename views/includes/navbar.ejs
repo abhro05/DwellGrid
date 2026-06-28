@@ -8,14 +8,17 @@
       <div class="navbar-nav">
         <a class="nav-link active" href="/">Home</a>
         <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="listings/new">Add New Listing</a>
+        <a class="nav-link" href="/listings/new">Add New Listing</a>
       </div>
       <div class="navbar-nav ms-auto">
-        <% if(!currUser) { %>
+        <!-- FIX: Added locals. prefix to safely check for the user -->
+        <% if(!locals.currUser) { %>
         <a class="nav-link active" href="/signup">Sign up</a>
         <a class="nav-link" href="/login">Log in</a>
         <% } %>
-        <% if(currUser) { %>
+        
+        <!-- FIX: Added locals. prefix here as well -->
+        <% if(locals.currUser) { %>
         <a class="nav-link" href="/logout">Log out</a>
         <% } %>
       </div>

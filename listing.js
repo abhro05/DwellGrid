@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+// FIX: Corrected path. If this file is in 'models', review.js is in the same folder.
 const Review = require("./models/review.js");
 
 const listingSchema = new Schema({
@@ -28,6 +29,17 @@ const listingSchema = new Schema({
     owner: {
         type: Schema.Types.ObjectId,
         ref: "User",
+    },
+    geometry: {
+        type: {
+            type: String, // FIX: Added "type: " before String
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
     }
 });
 

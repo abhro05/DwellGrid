@@ -20,7 +20,6 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const userRouter = require("./routes/user.js");
 
-
 const MONGO_URL= "mongodb://127.0.0.1:27017/DwellGrid";
 async function main() {
     await mongoose.connect(MONGO_URL);
@@ -57,9 +56,11 @@ app.get("/", (req, res) => {
     res.send("Hi, I am root");
 });
 
+// 1. Session and Flash Initialization
 app.use(session(sessionOptions));
 app.use(flash());
 
+// 2. Passport Initialization
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -67,10 +68,15 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// 3. Locals Middleware (Safe to use req.flash and req.user here)
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
+    
+    // This makes the API key available to every EJS file
+    res.locals.GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY; 
+    
     next();
 });
 
@@ -105,11 +111,11 @@ const validateReview = (req, res, next) => {
     }
 }
 
+// 4. Routes
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 
-// FIX: Use app.all("*") to strictly catch unmatched paths
 // Catch‑all for any unmatched route – placed after all other routes
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
@@ -118,7 +124,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     let {statusCode=500, message="Something went wrong"} = err;
     res.status(statusCode).render("error.ejs", { err });
-    //res.status(statusCode).send(message);
 });
 
 app.listen(8080, () => {
