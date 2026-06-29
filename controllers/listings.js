@@ -37,7 +37,8 @@ module.exports.createListing = async (req, res) => {
         }
     }
 
-    // --- GOOGLE MAPS GEOCODING API LOGIC ---
+    // --- PAUSED GOOGLE MAPS GEOCODING API LOGIC ---
+    /*
     const address = `${data.location}, ${data.country}`;
     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
     
@@ -50,9 +51,12 @@ module.exports.createListing = async (req, res) => {
     }
 
     const { lat, lng } = geoData.results[0].geometry.location;
+    */
+    
+    // HARDCODED DUMMY COORDINATES TO BYPASS DATABASE REQUIREMENT
     const geometry = {
         type: "Point",
-        coordinates: [lng, lat]
+        coordinates: [88.3639, 22.5726] // Defaulting to dummy longitude and latitude
     };
     // ------------------------------------------
 
@@ -86,7 +90,8 @@ module.exports.updateListing = async (req, res) => {
     let { id } = req.params;
     let data = req.body.listing;
 
-    // FIX: Re-fetch coordinates so the map marker moves if the location is edited!
+    // --- PAUSED GOOGLE MAPS GEOCODING API LOGIC ---
+    /*
     const address = `${data.location}, ${data.country}`;
     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
     
@@ -101,6 +106,8 @@ module.exports.updateListing = async (req, res) => {
             coordinates: [lng, lat]
         };
     }
+    */
+    // ------------------------------------------
 
     // Update listing with new text data and new coordinates
     let listing = await Listing.findByIdAndUpdate(id, {...data});

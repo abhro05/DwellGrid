@@ -14,15 +14,19 @@ const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const userRouter = require("./routes/user.js");
 
-const MONGO_URL= "mongodb://127.0.0.1:27017/DwellGrid";
+// const MONGO_URL= "mongodb://127.0.0.1:27017/DwellGrid";
+
+const dbUrl = process.env.ATLASDB_URL;
+
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 }
 
 main()
@@ -40,7 +44,20 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600,
+})
+
+store.on("error", () => {
+    console.log("ERROR in MONGO SESSION STORE", err);
+});
+
 const sessionOptions = {
+    store,
     secret: "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
@@ -52,9 +69,10 @@ const sessionOptions = {
     },
 };
 
-app.get("/", (req, res) => {
-    res.send("Hi, I am root");
-});
+//app.get("/", (req, res) => {
+//    res.send("Hi, I am root");
+//});
+
 
 // 1. Session and Flash Initialization
 app.use(session(sessionOptions));
