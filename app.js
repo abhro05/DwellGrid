@@ -52,7 +52,8 @@ const store = MongoStore.create({
     touchAfter: 24 * 3600,
 })
 
-store.on("error", () => {
+// FIX: Added 'err' inside the parentheses
+store.on("error", (err) => {
     console.log("ERROR in MONGO SESSION STORE", err);
 });
 
